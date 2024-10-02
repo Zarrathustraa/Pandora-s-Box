@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+  min-height: 300vh; /* Ensures enough height to scroll */
+  overflow-x: hidden; /* Prevents horizontal scroll if content overflows */
+  position: relative; /* Allows absolute children to cover container */
+}
+
+.heroParallax {
+  height: 100vh; /* Takes full height of the viewport */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Needed for z-index */
+  z-index: 10; /* Places hero above background section */
+}
+
+.parallaxSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
