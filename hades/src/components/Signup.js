@@ -2,22 +2,37 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Alert } from "react-bootstrap";
 import { Button } from "react-bootstrap";
-import { useUserAuth } from "../context/UserAuthContext";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import{
+    createUserWithEmailAndPassword
+} from "firebase/auth";
+
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
-  const { signUp } = useUserAuth();
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("")
   let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      await signUp(email, password);
-      navigate("/");
-    } catch (err) {
+    await createUserWithEmailAndPassword(auth, email, password);
+    const user= auth.currentUser;
+    if(user){
+        await setDoc(doc(db, "Users", user.uid),{
+            Email: user.email,
+            firstName: fname,
+            lastName: lname
+        });
+    }
+    console.log("User Registered Successfully!");
+    }
+    catch (err) {
       setError(err.message);
     }
   };
@@ -28,10 +43,26 @@ const Signup = () => {
         <h2 className="mb-3">Firebase Auth Signup</h2>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleSubmit}>
+
+        <Form.Group className="mb-3" controlId="formBasicFirst">
+            <Form.Control
+              type="text"
+              placeholder="First Name"
+              onChange={(e) => setFname(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicLast">
+            <Form.Control
+              type="text"
+              placeholder="Last Name"
+              onChange={(e) => setLname(e.target.value)}
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Control
               type="email"
-              placeholder="Email address"
+              placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
