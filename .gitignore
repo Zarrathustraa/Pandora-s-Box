@@ -29,7 +29,7 @@
 # Variables #
 ######################
 *.env
-*firebase.js
+hades/src/firebase.js
 
 # OS generated files #
 ######################
